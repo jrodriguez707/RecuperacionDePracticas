@@ -2,28 +2,29 @@ import zipfile
 import itertools
 import time
 import os
+import zlib
 
-# ===============================
-# PROBAR UNA CONTRASEÑA LEYENDO 1 SOLO BYTE
-# ===============================
+
 def probar_contraseña(zip_name, contraseña):
     try:
         with zipfile.ZipFile(zip_name, 'r') as zf:
             archivo = zf.namelist()[0]
-
-            # Abrimos el archivo interno y leemos SOLO 1 BYTE
             with zf.open(archivo, pwd=contraseña.encode()) as f:
                 f.read(1)
-
         return True
-    except:
+    except (RuntimeError, zipfile.BadZipFile, zlib.error):
         return False
 
 
-# ===============================
-# FUERZA BRUTA PARA DICCIONARIO.ZIP
-# ===============================
+def validar_archivo(zip_name):
+    if not os.path.exists(zip_name):
+        raise FileNotFoundError(f"El archivo '{zip_name}' no existe.")
+    if not zipfile.is_zipfile(zip_name):
+        raise ValueError(f"El archivo '{zip_name}' no es un ZIP válido.")
+
+
 def abrir_diccionario_zip():
+    validar_archivo("diccionario.zip")
 
     alfabeto = "eEaAoOlLsSnNrRiIdDtTcCuUmMpPbBgGvVqQhHfFzZjJyYñÑkKwWxX0123456789"
     longitud = 4
@@ -49,16 +50,14 @@ def abrir_diccionario_zip():
     return False
 
 
-# ===============================
-# ATAQUE POR DICCIONARIO PARA COMPRESS.ZIP
-# ===============================
 def abrir_compress_zip():
+    validar_archivo("compress.zip")
+
     if not os.path.exists("diccionario.txt"):
         print("El archivo diccionario.txt no está disponible.")
         return
 
     print("Probando contraseñas para compress.zip...")
-
     inicio = time.time()
 
     with open("diccionario.txt", "r", encoding="utf-8", errors="ignore") as f:
@@ -74,12 +73,14 @@ def abrir_compress_zip():
     print("No se encontró la contraseña en el diccionario.")
 
 
-# ===============================
-# PROGRAMA PRINCIPAL
-# ===============================
 print("=== RECUPERADOR DE CONTRASEÑAS ZIP ===\n")
 
-if abrir_diccionario_zip():
-    abrir_compress_zip()
+try:
+    if abrir_diccionario_zip():
+        abrir_compress_zip()
+except FileNotFoundError as e:
+    print(f"Error: {e}")
+except ValueError as e:
+    print(f"Error: {e}")
 
 print("\nPrograma terminado.")
