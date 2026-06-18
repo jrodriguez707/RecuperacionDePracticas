@@ -147,13 +147,13 @@ El programa:
 === RECUPERADOR DE CONTRASEÑAS ZIP ===
 
 Buscando contraseña de diccionario.zip...
-Contraseña encontrada: aB3x
-Tiempo: 12.47 segundos
+Contraseña encontrada: Lov3
+Tiempo: 482.56 segundos
 diccionario.txt extraído.
 
 Probando contraseñas para compress.zip...
-Contraseña encontrada para compress.zip: summer2024
-Tiempo: 3.21 segundos
+Contraseña encontrada para compress.zip: huangguanwang
+Tiempo: 65.27 segundos
 
 Programa terminado.
 ```
